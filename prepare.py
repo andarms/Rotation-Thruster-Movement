@@ -16,8 +16,8 @@ SCALE_FACTOR = 0.3 # For scaleing down ship images.
 
 DIRECT_DICT = {pg.K_UP   : ( 0,-1),
                pg.K_DOWN : ( 0, 1),
-               pg.K_RIGHT: ( 1, 0),
-               pg.K_LEFT : (-1, 0)}
+               pg.K_e: ( 1, 0),
+               pg.K_q : (-1, 0)}
 
 
 # Set up environment.
