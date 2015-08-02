@@ -42,11 +42,11 @@ class App(object):
         caption = template.format(prepare.CAPTION, self.clock.get_fps())
         pg.display.set_caption(caption)
 
-    def update(self):
+    def update(self, dt):
         """
         Update necessary elements; currently only the level.
         """
-        self.level.update(self.keys)
+        self.level.update(self.keys, dt)
         
     def render(self):
         """
@@ -61,10 +61,10 @@ class App(object):
         The main game loop.
         """
         while not self.done:
+            dt = self.clock.tick(self.fps)/1000.0
             self.event_loop()
-            self.update()
+            self.update(dt)
             self.render()
-            self.clock.tick(self.fps)
             self.display_fps()
 
 

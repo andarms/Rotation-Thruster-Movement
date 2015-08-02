@@ -41,12 +41,12 @@ class Level(object):
         shrink = pg.transform.smoothscale(self.image, (w//4, h//4))
         self.base = tools.tile_surface(prepare.SCREEN_SIZE, shrink, True)
 
-    def update(self, keys):
+    def update(self, keys, dt):
         """
         Updates the player and then adjusts the viewport with respect to the
         player's new position.
         """
-        self.player_singleton.update(keys, self.rect)
+        self.player_singleton.update(keys, self.rect, dt)
         self.update_viewport()
 
     def update_viewport(self, start=False):
