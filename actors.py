@@ -1,12 +1,13 @@
 """
 This module contains the Player class for the user controlled character.
 """
+import math
 
 import pygame as pg
 
 import prepare
 
-
+GRAD = math.pi/180
 class Player(pg.sprite.Sprite):
     """
     This class represents our user controlled character.
@@ -15,7 +16,7 @@ class Player(pg.sprite.Sprite):
         super(Player, self).__init__(*groups)
         self.speed = speed # px/seg
         self.angle = 90
-        self.source_image = pg.transform.rotozoom(image, 0.0, prepare.SCALE_FACTOR)
+        self.source_image = pg.transform.rotozoom(image, 0, prepare.SCALE_FACTOR)
         self.image = pg.transform.rotate(self.source_image, self.angle)
         self.rect = self.image.get_rect(center=pos)
         self.pos = list(pos)
@@ -24,11 +25,15 @@ class Player(pg.sprite.Sprite):
         """
         Updates the players position based on currently held keys.
         """
-
+        dx = dy = 0.0
         for key in prepare.DIRECT_DICT:
             if keys[key]:
-                self.pos[0] += prepare.DIRECT_DICT[key][0]*self.speed*dt
-                self.pos[1] += prepare.DIRECT_DICT[key][1]*self.speed*dt
+                dx = prepare.DIRECT_DICT[key][0]*math.cos(self.angle*GRAD)
+                dy = prepare.DIRECT_DICT[key][1]*math.sin(self.angle*GRAD)
+
+        self.pos[0] += dx*self.speed*dt
+        self.pos[1] += dy*self.speed*dt
+        self.rect.center = self.pos
 
         rotate_factor = 0
         if keys[pg.K_LEFT]:
@@ -43,8 +48,7 @@ class Player(pg.sprite.Sprite):
             self.rect.centerx = round(self.pos[0], 0)
             self.rect.centery = round(self.pos[1], 0)
 
-        
-        self.rect.center = self.pos
+        # clampin the ship in the screen
         self.rect.clamp_ip(bounding)
 
     def draw(self, surface):
