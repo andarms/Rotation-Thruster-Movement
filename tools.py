@@ -60,3 +60,7 @@ def tile_surface(size, tile, transparent=False):
         for j in range(0, tile_size[1]+size[1], tile_size[1]):
             surface.blit(tile, (i,j))
     return surface
+
+
+def hit_rect_collision (left, right):
+    return left.hit_rect.colliderect(right.hit_rect)

@@ -32,7 +32,7 @@ class Level(object):
         self.update_viewport(True)
         self.mid_viewport = self.viewport.copy()
         self.mid_true = list(self.mid_viewport.topleft)
-        self.max_obstacles = 12
+        self.max_obstacles = 20
         self.obstacles = self.make_obstacles()
 
     def make_layers(self):
@@ -66,10 +66,11 @@ class Level(object):
         Updates the player and then adjusts the viewport with respect to the
         player's new position.
         """
-        self.player_singleton.update(keys, self.rect, dt)
+        self.player_singleton.update(keys, self.rect, self.obstacles, dt)
         self.obstacles.update(dt)
         self.gfx_group.update(dt)
-        self.update_viewport()
+        if self.player_singleton:
+            self.update_viewport()
 
     def update_viewport(self, start=False):
         """

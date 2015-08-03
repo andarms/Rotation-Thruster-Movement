@@ -6,7 +6,7 @@ import random
 
 import pygame as pg
 
-import prepare
+import prepare, tools
 
 GRAD = math.pi/180
 FRAGMENTMAXSPEED = 200
@@ -25,15 +25,16 @@ class Player(pg.sprite.Sprite):
         self.source_image = pg.transform.rotozoom(image, 0, prepare.SCALE_FACTOR)
         self.image = pg.transform.rotate(self.source_image, self.angle)
         self.rect = self.image.get_rect(center=pos)
+        self.hit_rect = self.rect.inflate(-5, -5)
+        self.hit_rect.center = self.rect.center
         self.pos = list(pos)
         self.dx = 0.0
         self.dy = 0.0
 
-    def update(self, keys, bounding, dt):
+    def update(self, keys, bounding, obstacles, dt):
         """
         Updates the players position based on currently held keys.
         """
-
         for key in prepare.DIRECT_DICT:
             if keys[key]:
                 self.dx = prepare.DIRECT_DICT[key][0]*math.cos(self.angle*GRAD)
@@ -68,7 +69,16 @@ class Player(pg.sprite.Sprite):
             self.rect.centerx = round(self.pos[0], 0)
             self.rect.centery = round(self.pos[1], 0)
 
-        self.wrap_in_screen(bounding)        
+        self.wrap_in_screen(bounding)
+        self.check_collisions(obstacles)
+
+    def check_collisions(self, obstacles):
+        collision = pg.sprite.spritecollideany(self, obstacles, 
+                                collided=tools.hit_rect_collision)
+        if collision:
+            for _ in range(50):
+                RedFragment(self.pos, self.gfx_group)
+            self.kill()
 
     def wrap_in_screen(self, bounding):
         buffer = 50
@@ -81,6 +91,7 @@ class Player(pg.sprite.Sprite):
         elif self.rect.centery > bounding.bottom + buffer:
             self.rect.centery = bounding.top - buffer
 
+        self.hit_rect.center = self.rect.center
         self.pos = list(self.rect.center)
 
     def draw(self, surface):
@@ -132,3 +143,16 @@ class Smoke(Fragment):
         arc = self.smokespeed * self.smokearc
         self.dx = dx * self.smokespeed + random.random()*2*arc - arc
         self.dy = dy * self.smokespeed + random.random()*2*arc - arc
+
+class RedFragment(Fragment):
+    """explodes outward from (killed) ship"""
+    def __init__(self, pos, *groups):
+        super(RedFragment, self).__init__(pos, 3, *groups)
+        #red-only part -----------------------------
+        self.color = (random.randint(25,255),0,0) # red     
+        self.pos[0] = pos[0]
+        self.pos[1] = pos[1]
+        self.dx = random.randint(-self.fragmentmaxspeed,self.fragmentmaxspeed)
+        self.dy = random.randint(-self.fragmentmaxspeed,self.fragmentmaxspeed)
+        self.lifetime = 1 + random.random()*3 # max 3 seconds
+        self.init2() # continue with generic Fragment class
