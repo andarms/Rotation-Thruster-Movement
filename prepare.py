@@ -26,7 +26,6 @@ pg.init()
 pg.display.set_caption(CAPTION)
 pg.display.set_mode(SCREEN_SIZE)
 
-
 # Load all graphics.
 GFX = tools.load_all_gfx("resources")
 GFX["ships"] = tools.load_all_gfx(os.path.join("resources", "ships"))

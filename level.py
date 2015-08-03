@@ -23,7 +23,9 @@ class Level(object):
     def __init__(self, viewport, player):
         self.image = BIG_STARS.copy()
         self.rect = self.image.get_rect()
+        self.gfx_group = pg.sprite.Group()
         player.pos = [self.rect.centerx, self.rect.centery]
+        player.gfx_group = self.gfx_group
         self.player_singleton = pg.sprite.GroupSingle(player)
         self.make_layers()
         self.viewport = viewport
@@ -66,6 +68,7 @@ class Level(object):
         """
         self.player_singleton.update(keys, self.rect, dt)
         self.obstacles.update(dt)
+        self.gfx_group.update(dt)
         self.update_viewport()
 
     def update_viewport(self, start=False):
@@ -90,7 +93,9 @@ class Level(object):
         """
         self.player_singleton.clear(self.image, clear_callback)
         self.obstacles.clear(self.image, clear_callback)
+        self.gfx_group.clear(self.image, clear_callback)
         self.obstacles.draw(self.image)
+        self.gfx_group.draw(self.image)
         self.player_singleton.draw(self.image)
         surface.blit(self.base, (0,0))
         surface.blit(self.mid_image, (0,0), self.mid_viewport)
