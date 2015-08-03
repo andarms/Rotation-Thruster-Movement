@@ -57,7 +57,8 @@ class Level(object):
             y = random.randint(0, self.rect.h)
             aster = Asteroid((x, y))
             if not pg.sprite.spritecollideany(aster, obstacles):
-                aster.add(obstacles)
+                if not pg.sprite.spritecollide(aster, self.player_singleton, False):
+                    aster.add(obstacles)
         return obstacles
 
 
