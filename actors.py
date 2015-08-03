@@ -70,7 +70,20 @@ class Player(pg.sprite.Sprite):
             self.rect.centery = round(self.pos[1], 0)
 
         # clampin the ship in the screen
-        self.rect.clamp_ip(bounding)
+        self.wrap_in_screen(bounding)
+
+    def wrap_in_screen(self, bounding):
+        buffer = 50
+        if self.rect.centerx < bounding.left - buffer:
+            self.rect.centerx = bounding.right + buffer
+        elif self.rect.centerx > bounding.right + buffer:
+            self.rect.centerx = bounding.left - buffer
+        elif self.rect.centery < bounding.top - buffer:
+            self.rect.centery = bounding.bottom + buffer
+        elif self.rect.centery > bounding.bottom + buffer:
+            self.rect.centery = bounding.top - buffer
+
+        self.pos = list(self.rect.center)
 
     def draw(self, surface):
         """
