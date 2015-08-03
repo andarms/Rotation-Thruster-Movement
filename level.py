@@ -32,7 +32,7 @@ class Level(object):
         self.update_viewport(True)
         self.mid_viewport = self.viewport.copy()
         self.mid_true = list(self.mid_viewport.topleft)
-        self.max_obstacles = 20
+        self.max_obstacles = 10
         self.obstacles = self.make_obstacles()
 
     def make_layers(self):

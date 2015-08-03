@@ -35,7 +35,7 @@ class Asteroid(pg.sprite.Sprite):
         self.frames = Loop(prepare.GFX['asteroid_simple'], (96, 80), 60, 7, 21, missing=4)
         self.image = self.frames.frame
         self.rect = self.image.get_rect(center=pos)
-        self.hit_rect = self.rect.inflate(-15, -15)
+        self.hit_rect = self.rect.inflate(-25, -25)
 
     def update(self, dt):
         self.image = self.frames.get_next(dt)

@@ -25,7 +25,7 @@ class Player(pg.sprite.Sprite):
         self.source_image = pg.transform.rotozoom(image, 0, prepare.SCALE_FACTOR)
         self.image = pg.transform.rotate(self.source_image, self.angle)
         self.rect = self.image.get_rect(center=pos)
-        self.hit_rect = self.rect.inflate(-5, -5)
+        self.hit_rect = self.rect.inflate(-20, -20)
         self.hit_rect.center = self.rect.center
         self.pos = list(pos)
         self.dx = 0.0
