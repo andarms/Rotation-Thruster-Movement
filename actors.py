@@ -38,7 +38,7 @@ class Player(pg.sprite.Sprite):
             if keys[key]:
                 self.dx = prepare.DIRECT_DICT[key][0]*math.cos(self.angle*GRAD)
                 self.dy = prepare.DIRECT_DICT[key][1]*math.sin(self.angle*GRAD)
-                # Smoke(self.rect.center, -self.dy, -self.dx, self.gfx_group)
+                Smoke(self.rect.center, -self.dy, -self.dx, self.gfx_group)
         
 
         if any((keys[pg.K_UP], keys[pg.K_DOWN], keys[pg.K_e], keys[pg.K_q])):
