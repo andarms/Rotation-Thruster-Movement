@@ -2,11 +2,13 @@
 This module contains the Level class.
 Drawing and updating of actors should occur here.
 """
+import random
 
 import pygame as pg
 
 import prepare
 import tools
+from aster import Asteroid
 
 
 BIG_STARS = tools.tile_surface((2048,2048), prepare.GFX["stars"], True)
@@ -28,6 +30,8 @@ class Level(object):
         self.update_viewport(True)
         self.mid_viewport = self.viewport.copy()
         self.mid_true = list(self.mid_viewport.topleft)
+        self.max_obstacles = 12
+        self.obstacles = self.make_obstacles()
 
     def make_layers(self):
         """
@@ -41,12 +45,27 @@ class Level(object):
         shrink = pg.transform.smoothscale(self.image, (w//4, h//4))
         self.base = tools.tile_surface(prepare.SCREEN_SIZE, shrink, True)
 
+    def make_obstacles(self):
+        """
+        Creates randoms Asteroids in the level and add to the obstacles group
+        """
+        obstacles = pg.sprite.Group()
+        while len(obstacles) < self.max_obstacles:
+            x = random.randint(0, self.rect.w)
+            y = random.randint(0, self.rect.h)
+            aster = Asteroid((x, y))
+            if not pg.sprite.spritecollideany(aster, obstacles):
+                aster.add(obstacles)
+        return obstacles
+
+
     def update(self, keys, dt):
         """
         Updates the player and then adjusts the viewport with respect to the
         player's new position.
         """
         self.player_singleton.update(keys, self.rect, dt)
+        self.obstacles.update(dt)
         self.update_viewport()
 
     def update_viewport(self, start=False):
@@ -70,6 +89,8 @@ class Level(object):
         Then blit appropriate viewports of all layers.
         """
         self.player_singleton.clear(self.image, clear_callback)
+        self.obstacles.clear(self.image, clear_callback)
+        self.obstacles.draw(self.image)
         self.player_singleton.draw(self.image)
         surface.blit(self.base, (0,0))
         surface.blit(self.mid_image, (0,0), self.mid_viewport)

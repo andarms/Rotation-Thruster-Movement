@@ -64,7 +64,7 @@ class App(object):
             dt = self.clock.tick(self.fps)/1000.0
             self.event_loop()
             self.update(dt)
-            self.render()
+            self.render()}
             self.display_fps()
 
 
